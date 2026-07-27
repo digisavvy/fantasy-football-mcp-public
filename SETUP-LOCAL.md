@@ -7,12 +7,13 @@ runs an HTTP server and is not needed for Claude Code or Claude Desktop.
 ## Install
 
 The commands below assume the repository is located at the requested absolute
-path:
+path. Use Python 3.13 (`brew install python@3.13`) — the pinned
+`pydantic==2.11.9` has no wheels for Python 3.14 and fails to build:
 
 ```bash
 cd /Users/alexvasquez/Repositories/yahoo-fantasy
-python3 --version
-python3 -m venv /Users/alexvasquez/Repositories/yahoo-fantasy/.venv
+python3.13 --version
+python3.13 -m venv /Users/alexvasquez/Repositories/yahoo-fantasy/.venv
 /Users/alexvasquez/Repositories/yahoo-fantasy/.venv/bin/python -m pip install --upgrade pip
 /Users/alexvasquez/Repositories/yahoo-fantasy/.venv/bin/python -m pip install -r /Users/alexvasquez/Repositories/yahoo-fantasy/requirements.txt
 cp /Users/alexvasquez/Repositories/yahoo-fantasy/.env.example /Users/alexvasquez/Repositories/yahoo-fantasy/.env
