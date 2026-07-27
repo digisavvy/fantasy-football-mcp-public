@@ -43,6 +43,26 @@ class TestYahooApiCall:
     """Test Yahoo API call functionality."""
 
     @pytest.mark.asyncio
+    async def test_yahoo_api_call_without_credentials_fails_helpfully(
+        self, monkeypatch, mock_rate_limiter, mock_response_cache
+    ):
+        """Missing credentials fail before attempting a network request."""
+        monkeypatch.delenv("YAHOO_ACCESS_TOKEN", raising=False)
+        from src.api import yahoo_client
+
+        yahoo_client._YAHOO_ACCESS_TOKEN = None
+        mock_response_cache.get = AsyncMock(return_value=None)
+
+        with (
+            patch("src.api.yahoo_client.rate_limiter", mock_rate_limiter),
+            patch("src.api.yahoo_client.response_cache", mock_response_cache),
+            pytest.raises(RuntimeError, match="utils/setup_yahoo_auth.py"),
+        ):
+            await yahoo_api_call("test/endpoint")
+
+        mock_rate_limiter.acquire.assert_not_called()
+
+    @pytest.mark.asyncio
     async def test_yahoo_api_call_success(
         self, mock_env_vars, mock_rate_limiter, mock_response_cache
     ):

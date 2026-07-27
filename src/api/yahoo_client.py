@@ -49,10 +49,17 @@ async def yahoo_api_call(
         if cached_response is not None:
             return cached_response
 
+    access_token = get_access_token()
+    if not access_token:
+        raise RuntimeError(
+            "Yahoo credentials are not configured. Copy .env.example to .env, set "
+            "YAHOO_CLIENT_ID and YAHOO_CLIENT_SECRET, then run "
+            "utils/setup_yahoo_auth.py to create an access token."
+        )
+
     # Apply rate limiting
     await rate_limiter.acquire()
 
-    access_token = get_access_token()
     url = f"{YAHOO_API_BASE}/{endpoint}?format=json"
     headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json"}
 
